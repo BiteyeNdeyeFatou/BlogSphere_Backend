@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const connectDB =  require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+
 
 
 
@@ -16,6 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 //4 -> Importation des routes
+app.use("/api/auth", authRoutes);
+
 app.get("/", (req, res) => {
     res.send("Bienvenue sur l'API de la gestion des articles !");
 });
@@ -23,6 +27,6 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 //5 -> Lancement du serveur
-app.listen(PORT, () => {
-    console.log('Serveur lancé sur le port ${PORT} ');
+app.listen(5000, () => {
+  console.log('Server running on port 5000')
 });
