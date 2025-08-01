@@ -2,13 +2,12 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const connectDB = require('./config/db');
-const authRoutes = require("./routes/authRoutes")
-// Charger les variables d'environnement
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
+
 // Connexion à MongoDB
 connectDB();
-
 
 // Middlewares
 app.use(cors());
@@ -19,7 +18,6 @@ app.use('/api/auth', authRoutes);
 
 // Route test
 app.get('/', (req, res) => {
-  console.log("Route test appelée !");
   res.send("🚀 API BlogSphere en marche");
 });
 

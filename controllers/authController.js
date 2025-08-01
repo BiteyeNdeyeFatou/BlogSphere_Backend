@@ -27,18 +27,17 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Créer l'utilisateur
-    const user = await User({
+    const user = await User.create({
       username,
       email,
       password: hashedPassword
     });
 
-    await user.save()
-
     res.status(201).json({
       _id: user._id,
       username: user.username,
       email: user.email,
+      token: generateToken(user._id)
     });
   } catch (error) {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
@@ -68,3 +67,26 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 };
+
+// getProfile
+exports.getProfile = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ message: "Utilisateur introuvable" });
+    }
+
+    res.status(200).json({
+      _id: req.user._id,
+      username: req.user.username,
+      email: req.user.email,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+};
+
+// Logout (optionnel car JWT ne se "supprime" pas côté serveur)
+exports.logout = (req, res) => {
+  res.status(200).json({ message: "Déconnexion réussie." });
+};
+
