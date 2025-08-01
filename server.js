@@ -1,32 +1,28 @@
-//1 -> Importation des packages
 const express = require('express');
-const cors = require('cors');
 require('dotenv').config();
-const connectDB =  require('./config/db');
-const authRoutes = require('./routes/authRoutes');
-
-
-
+const cors = require('cors');
+const connectDB = require('./config/db');
+const authRoutes = require("./routes/authRoutes")
+// Charger les variables d'environnement
 
 const app = express();
-//2 -> Connexion à la base de donnée
+// Connexion à MongoDB
 connectDB();
 
 
-//3 => Middleware Cors
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-//4 -> Importation des routes
-app.use("/api/auth", authRoutes);
+// Routes
+app.use('/api/auth', authRoutes);
 
-app.get("/", (req, res) => {
-    res.send("Bienvenue sur l'API de la gestion des articles !");
+// Route test
+app.get('/', (req, res) => {
+  console.log("Route test appelée !");
+  res.send("🚀 API BlogSphere en marche");
 });
 
+// Lancer le serveur
 const PORT = process.env.PORT || 5000;
-
-//5 -> Lancement du serveur
-app.listen(5000, () => {
-  console.log('Server running on port 5000')
-});
+app.listen(PORT, () => console.log(`✅ Serveur sur le port ${PORT}`));

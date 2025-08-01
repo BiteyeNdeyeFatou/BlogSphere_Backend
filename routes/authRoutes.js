@@ -1,10 +1,12 @@
-// Vérifiez dans votre fichier de routes (ex: `authRoutes.js`)
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const authControllers = require('../controllers/authController')
+// const protect  = require('../middlewares/authMiddleware');
 
 
-router.post('/register', authController.register); 
+// Authentification
+router.post('/register', authControllers.register);
+router.post('/login', authControllers.login);
+// Routes proté
 
 module.exports = router;
-
