@@ -1,29 +1,34 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+
 const protect = async (req, res, next) => {
   let token;
 
- if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+  // Vérifie s'il y a un token dans l'en-tête Authorization
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     try {
-      token = req.headers.authorization.split(' ')[1];
-      console.log("Token reçu :", token);
+      // Récupère juste le token (après "Bearer ")
+      token = req.headers.authorization.split(" ")[1];
 
+      // Vérifie et décode le token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Payload décodé :", decoded);
 
-      req.user = await User.findById(decoded.id).select('-password');
-      if (!req.user) {
-        return res.status(404).json({ message: "Utilisateur non trouvé" });
-      }
-      next();
+      // Trouve l'utilisateur dans la base
+      req.user = await User.findById(decoded.id).select("-password");
+
+      next(); // Passe au prochain middleware
     } catch (error) {
-      console.log("Erreur JWT :", error.message);
-      return res.status(401).json({ message: 'Token invalide' });
+      console.error("Erreur middleware protect :", error.message);
+      return res.status(401).json({ message: "Token invalide" });
     }
-  } else {
-    console.log("Pas de token dans l'en-tête");
-    return res.status(401).json({ message: 'Non autorisé, pas de token' });
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: "Pas de token, accès refusé" });
   }
 };
 
